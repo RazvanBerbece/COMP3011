@@ -13,6 +13,9 @@ The PayPal REST API can handle invoicing, orders, payments, payouts, subscriptio
 
 ## Description of data flow
 The PayPal payment service is integrated into various flight businesses’ applications through their PayPal REST API. 
+
 PayPal provides a gateway to their service through the ‘paypal.com/checkoutnow’ endpoint which can be requested using HTTP GET requests populated with various query data (e.g.: auth token from flight business, payment method, price, session ID). The PayPal Checkout Now resource then links to the PayPal Login resource, as users need to be logged in to finalise a payment. The login resource can be read (GET login form) and POSTed to (filled in login form) to execute the login method.
+
 Optionally, the PayPal Login resource also links to the PayPal Signup resource, for users who do not have a PayPal account and who need to create one to finalise the payment. Method wise, the same REST operations apply as for the login resource (GET the form, POST the filled in new account form).
+
 Finally, both the login and signup resources link to the PayPal Checkout Now resource, which is the final point of payment, at which the user can press a button to finalise the payment using funds available in their account (via a POST request). 
