@@ -18,7 +18,7 @@ Contributions will be made following this flow: branch out > pull request > merg
 ## Branch Naming
 In order to keep everything consistent and intuitive, new branches should follow a simple standardised naming structure.
 
-For instance, a developer might want to work on the Payment service and implement caching. The developer would then create a new branch with the name `payment/caching`.
+For instance, a developer might want to work on the Payments service and implement caching. The developer would then create a new branch with the name `payments/caching`.
 
 In general, a branch name would follow this structure: `<service name>/<feature hint>` or `<service name>/<documentation change hint>`.
 
