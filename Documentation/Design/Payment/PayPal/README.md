@@ -1,4 +1,4 @@
-# PayPal Payment Service Background Researc
+# PayPal Payment Service Background Research
 
 ## Description of service
 PayPal is an online payment service that allows users to pay for online or physical goods without using an actual credit/debit card or any financial detail. The PayPal account balance comes from either funding the account with money using a credit/debit card, bank transfers or transfers from other accounts. PayPal is also known to be very secure, fast, and flexible when it comes to ways of funding the account.
