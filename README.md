@@ -7,17 +7,17 @@ Contributions will be made following this flow: branch out > pull request > merg
 *The contribution workflow looks like this:*
 1. Pull the `main` branch from upstream into the local machine `main` branch
 2. Merge local `main` into local development branch
-3. Make code or solution changes on local development branch
+3. Make code or documentation changes on local development branch
 4. Stage, commit with a useful message, push to remote development branch
-5. Check that remote development branch has the changes
-6. Open up a Pull Request to `main` branch in order to push the updated solution / documentation
-7. Reviewers will check the PR and the changes in it
-8. The PR is merged or squashed into `main` if the review passes
+5. Open up a Pull Request to `main` branch from remote development branch
+6. Reviewers will check the PR and the changes in it
+7. The PR is merged or squashed into `main` if the review passes
 
 **Important:** All changes are made on local dev branches and never on the main branch. The main branch is only used to update local branches with the latest versions of code and documentation.
 
 ## Branch Naming
 In order to keep everything consistent and intuitive, new branches should follow a simple standardised naming structure.
+
 For instance, a developer might want to work on the Payment service and implement caching. The developer would then create a new branch with the name `payment/caching`.
 
 In general, a branch name would follow this structure: `<service name>/<feature hint>` or `<service name>/<documentation change hint>`.
