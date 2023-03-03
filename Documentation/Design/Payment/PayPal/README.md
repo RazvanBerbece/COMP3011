@@ -19,3 +19,6 @@ PayPal provides a gateway to their service through the ‘paypal.com/checkoutnow
 Optionally, the PayPal Login resource also links to the PayPal Signup resource, for users who do not have a PayPal account and who need to create one to finalise the payment. Method wise, the same REST operations apply as for the login resource (GET the form, POST the filled in new account form).
 
 Finally, both the login and signup resources link to the PayPal Checkout Now resource, which is the final point of payment, at which the user can press a button to finalise the payment using funds available in their account (via a POST request). 
+
+## Notes
+- Will use the sandboxed PayPal REST API to integrate this payment method into the solution

@@ -18,11 +18,9 @@ Contributions will be made following this flow: branch out > pull request > merg
 ## Branch Naming
 In order to keep everything consistent and intuitive, new branches should follow a simple standardised naming structure.
 
-For instance, a developer might want to work on the Payments service and implement caching. The developer would then create a new branch with the name `payments/caching`.
+For instance, a developer might want to work on the PayPal Payments service. The developer would then create a new branch with the name `payments/paypal`.
 
-In general, a branch name would follow this structure: `<service name>/<feature hint>` or `<service name>/<documentation change hint>`.
+In general, a branch name would follow this structure: `<service>/<represented business>`.
 
 ## Pull Requests
-When opening a pull request, try and explain in a few words what the changes are (e.g.: added X feature, updated Y documentation with Z, etc.) in the PR description so that the reviewers can easily match the description to the file changes.
-
-Additionally, please try and keep PRs relatively small. It's better to merge multiple smaller PRs than one big PR. This is because the bigger the PR, the greater the chance of breaking changes, and also that reviewers will have a hard time to review all the changes and put them into context to give the green light for merging into the main branch.
+Please try and keep PRs relatively small. It's better to merge multiple smaller PRs than one big PR.
