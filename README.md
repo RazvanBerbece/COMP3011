@@ -1,26 +1,28 @@
 # COMP3011
-Monorepo which holds the code and documentation for CWs 1 and 2 of the COMP3011 module.
+Monorepo which holds the code and documentation for CW2 of the COMP3011 module.
 
-# Contribution Guidelines
-Contributions will be made following this flow: branch out > pull request > merge
+# How to Run (Locally)
+1. In `Implementation/paypal_service/` run the `python manage.py runserver` command to start the service
+2. Navigate to http://127.0.0.1:8000/admin/, which is the project admin site
 
-*The contribution workflow looks like this:*
-1. Pull the `main` branch from upstream into the local machine `main` branch
-2. Merge local `main` into local development branch
-3. Make code or documentation changes on local development branch
-4. Stage, commit with a useful message, push to remote development branch
-5. Open up a Pull Request to `main` branch from remote development branch
-6. Reviewers will check the PR and the changes in it
-7. The PR is merged or squashed into `main` if the review passes
+# Local Database Access
+Database acces is done through the admin site. 
 
-**Important:** All changes are made on local dev branches and never on the main branch. The main branch is only used to update local branches with the latest versions of code and documentation.
+**Note: The models needs to be specifically registered with the admin site by adding them into the `Implementation/paypal_service/service/admin.py` file.**
 
-## Branch Naming
-In order to keep everything consistent and intuitive, new branches should follow a simple standardised naming structure.
+# Local Testing
+TODO
 
-For instance, a developer might want to work on the PayPal Payments service. The developer would then create a new branch with the name `payments/paypal`.
+# CI/CD
 
-In general, a branch name would follow this structure: `<service>/<represented business>`.
+# CI
+The web service codebase is automatically tested on pull requests to the main branch, to ensure that there were no breaking changes made to the code and that the service still works as expected.
 
-## Pull Requests
-Please try and keep PRs relatively small. It's better to merge multiple smaller PRs than one big PR.
+The automated testing workflow file can be found in `.github/workflows/test.yml`
+
+# CD
+The Django web service is going to be published on the public internet via deployment to PythonAnywhere.
+
+The deployment process is automated and pushes the newest version of the service to PythonAnywhere on pushes to the main branch.
+
+The automated deployment workflow file can be found in `.github/workflows/deploy.yml`
