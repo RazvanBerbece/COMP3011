@@ -1,4 +1,6 @@
-# Web Services Implementation (CW2)
-This folder will contain the Django projects for each of the services required for the COMP3011 project.
+# PayPal Payments Service
+This folder contains the Django project for the PayPal Payments service.
 
-Each area of service will be in its own folder (e.g.: `Payments`, `Flights`, `Aggregator`). Each of these folder will contain further subfolders for the specific business implementation of the reqired web services (e.g.: `Payments/PayPal`, `Flights/BritishAirways`)
+It will include source code, DB schemas, documentation, tests and anything else that is needed to run the service.
+
+The source code files can be found in `./src/`, and the automated test code files can be found in `./test/`.
