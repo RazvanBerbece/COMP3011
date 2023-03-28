@@ -50,7 +50,7 @@ def signup(request):
             response.success = 0
             return JsonResponse(response.get_json(), safe = False)
         elif status == -3:
-            # Invalid email address
+            # Invalid password
             response._error = { "message": f"The provided password is too weak to use for registration." }
             response.success = 0
             return JsonResponse(response.get_json(), safe = False)
