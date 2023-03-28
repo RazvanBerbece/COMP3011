@@ -126,7 +126,7 @@ def delete(request, transactionId: str):
         if (status == -1):
             # Transaction not found
             timestamp = datetime.now(timezone.utc).timestamp() * 1000 # in milliseconds since Unix epoch
-            response = Response(f"/{transactionId}", transactionId, { "message": f"Transaction with ID {transactionId} failed to be removed from store." }, timestamp, 0)
+            response = Response(f"/{transactionId}", transactionId, { "message": f"Transaction with ID {transactionId} not found in store." }, timestamp, 0)
             return JsonResponse(response.get_json(), safe = False)
         elif (status == -2):
             # Transaction id not valid
