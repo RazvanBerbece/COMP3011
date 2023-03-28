@@ -1,5 +1,6 @@
 from datetime import *
 
+# Django imports
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -8,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .classes.message.response.Response import Response
 from .classes.message.response.PaymentResponse import PaymentResponse
 
-# Microservices Interfaces
+# Component Interfaces
 from .classes.component.auth.auth import AuthComponent
 from .classes.component.pay.pay import PaymentComponent
 
@@ -30,10 +31,10 @@ def signup(request):
     # Get POST body data
     email = request.POST.get('email')
     password = request.POST.get('password')
-    # Inject service instance
-    auth_service = AuthComponent()
+    # Inject component instances
+    auth_component = AuthComponent()
     # Process
-    status = auth_service.register_user(email, password)
+    status = auth_component.register_user(email, password)
     # Send response
     timestamp = datetime.now(timezone.utc).timestamp() * 1000 # in milliseconds since Unix epoch
     response = Response("/signup/", None, {}, timestamp, 1)
@@ -52,10 +53,10 @@ def signin(request):
     # Get POST body data
     email = request.POST.get('email')
     password = request.POST.get('password')
-    # Inject service instance
-    auth_service = AuthComponent()
-    # Process
-    status = auth_service.authenticate_user(email, password)
+    # Inject component instances
+    auth_component = AuthComponent()
+    # Authenticate
+    status = auth_component.authenticate_user(email, password)
     # Send response
     timestamp = datetime.now(timezone.utc).timestamp() * 1000 # in milliseconds since Unix epoch
     response = Response("/signin/", None, {}, timestamp, 1)
@@ -75,10 +76,10 @@ def pay(request):
     password = request.POST.get('password')
     value = request.POST.get('value')
     company = request.POST.get('company')
-    # Inject service instance
-    payment_service = PaymentComponent()
-    # Process payment details
-    transaction, err = payment_service.process_payment(email, password, value, company)
+    # Inject component instances
+    payment_component = PaymentComponent()
+    # Process payment details and login credentials
+    transaction, err = payment_component.process_payment(email, password, value, company)
     if err != None:
         # Payment failed to process
         timestamp = datetime.now(timezone.utc).timestamp() * 1000 # in milliseconds since Unix epoch
@@ -94,15 +95,16 @@ def delete(request, transactionId: str):
     """
     Endpoint to request a transaction deletion from the store using details provided in the URL path.
     """
-    # Inject service instance
-    payment_service = PaymentComponent()
+    # Inject component instances
+    payment_component = PaymentComponent()
     # Remove transaction
-    status = payment_service.delete_payment(transactionId)
+    status = payment_component.delete_payment(transactionId)
     if (status == False):
         # Transaction not found or deletion failed
         timestamp = datetime.now(timezone.utc).timestamp() * 1000 # in milliseconds since Unix epoch
         response = Response(f"/{transactionId}", transactionId, { "message": f"Transaction with ID {transactionId} failed to be removed from store." }, timestamp, 0)
         return JsonResponse(response.get_json(), safe = False)
+    # Transaction deletion successful
     timestamp = datetime.now(timezone.utc).timestamp() * 1000 # in milliseconds since Unix epoch
     response = Response(f"/{transactionId}", transactionId, {}, timestamp, 1)
     return JsonResponse(response.get_json(), safe = False)
