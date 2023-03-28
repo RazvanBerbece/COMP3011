@@ -26,7 +26,8 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-
+    steps:
+    - uses: actions/checkout@v2
     - name: Run Tests
       working-directory: ./Implementation/payfriend_service
       run: |
