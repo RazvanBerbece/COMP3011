@@ -60,6 +60,6 @@ class PaymentComponent():
         if (transactionId == ""):
             return -2
         status = self.transactions_context.delete_transaction_from_table(transactionId)
-        if (status == -1):
+        if (status[0] == -1):
             return -1
         return 0
