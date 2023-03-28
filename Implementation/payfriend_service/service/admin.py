@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Transactions
+from .models import Transaction, User
 
 # Register your models here.
-admin.site.register(Transactions)
+admin.site.register(Transaction)
+admin.site.register(User)

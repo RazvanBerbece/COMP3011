@@ -14,7 +14,7 @@ class AuthService():
         # Process user input
         hash, salt = Security.get_salted_and_hashed_plaintext(password)
         # Store
-        users_context.add_user_to_table(email, hash, salt)
+        users_context.add_user_to_table(email=email, hash=hash, salt=salt)
         # Return status code / error
         return 0
     
