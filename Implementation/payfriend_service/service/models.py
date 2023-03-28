@@ -5,9 +5,9 @@ from django.db import models
 class Transaction(models.Model):
     TransactionId = models.CharField(max_length=80)           
     Value = models.FloatField()           
-    CustomerEmail = models.CharField(max_length=80)                          
-    Timestamp = models.DateTimeField()        
-    Company = models.DateTimeField(max_length=80)                     
+    CustomerEmail = models.CharField(max_length=80) 
+    Company = models.CharField(max_length=80)                            
+    Timestamp = models.FloatField()                          
 
 class User(models.Model):
     Email = models.CharField(max_length=80)

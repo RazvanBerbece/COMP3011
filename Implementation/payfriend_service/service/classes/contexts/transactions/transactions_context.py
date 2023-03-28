@@ -7,10 +7,15 @@ class TransactionsContext:
     """
 
     @staticmethod
-    def add_transaction_to_table():
-        pass
+    def add_transaction_to_table(transaction: object):
+        transaction = Transaction(TransactionId=transaction["id"], \
+             Value=transaction["value"], \
+             CustomerEmail=transaction["email"], \
+             Timestamp=transaction["timestamp"], \
+             Company=transaction["company"])
+        transaction.save()
     
     @staticmethod
-    def delete_transaction_from_table():
+    def delete_transaction_from_table(transactionId: str):
         pass
 

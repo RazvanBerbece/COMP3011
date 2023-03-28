@@ -10,6 +10,7 @@ from .classes.message.response.PaymentResponse import PaymentResponse
 
 # Microservices Interfaces
 from .classes.component.auth.auth import AuthComponent
+from .classes.component.pay.pay import PaymentComponent
 
 # Create your views here.
 
@@ -70,4 +71,20 @@ def pay(request):
     Endpoint to request a payment processing using details provided in a POST request form-body.
     """
     # Get POST body data
-    
+    email = request.POST.get('email')
+    password = request.POST.get('password')
+    value = request.POST.get('value')
+    company = request.POST.get('company')
+    # Inject service instance
+    payment_service = PaymentComponent()
+    # Process payment details
+    transaction, err = payment_service.process_payment(email, password, value, company)
+    if err != None:
+        # Payment failed to process
+        timestamp = datetime.now(timezone.utc).timestamp() * 1000 # in milliseconds since Unix epoch
+        response = Response("/pay/", None, { "message": err }, timestamp, 0)
+        return JsonResponse(response.get_json(), safe = False)
+    else:
+        # Successful payment
+        response = PaymentResponse(transaction["id"], None, transaction["timestamp"])
+        return JsonResponse(response.get_json(), safe = False)
