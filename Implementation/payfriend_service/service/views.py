@@ -88,3 +88,21 @@ def pay(request):
         # Successful payment
         response = PaymentResponse(transaction["id"], None, transaction["timestamp"])
         return JsonResponse(response.get_json(), safe = False)
+
+@csrf_exempt 
+def delete(request, transactionId: str):
+    """
+    Endpoint to request a transaction deletion from the store using details provided in the URL path.
+    """
+    # Inject service instance
+    payment_service = PaymentComponent()
+    # Remove transaction
+    status = payment_service.delete_payment(transactionId)
+    if (status == False):
+        # Transaction not found or deletion failed
+        timestamp = datetime.now(timezone.utc).timestamp() * 1000 # in milliseconds since Unix epoch
+        response = Response(f"/{transactionId}", transactionId, { "message": f"Transaction with ID {transactionId} failed to be removed from store." }, timestamp, 0)
+        return JsonResponse(response.get_json(), safe = False)
+    timestamp = datetime.now(timezone.utc).timestamp() * 1000 # in milliseconds since Unix epoch
+    response = Response(f"/{transactionId}", transactionId, {}, timestamp, 1)
+    return JsonResponse(response.get_json(), safe = False)

@@ -17,5 +17,10 @@ class TransactionsContext:
     
     @staticmethod
     def delete_transaction_from_table(transactionId: str):
-        pass
+        try:
+            t = Transaction.objects.get(TransactionId=transactionId)
+            t.delete()
+            return 0
+        except:
+            return -1
 

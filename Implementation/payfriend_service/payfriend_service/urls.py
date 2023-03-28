@@ -22,5 +22,6 @@ urlpatterns = [
     path('', views.gateway, name='gateway'),
     path('signup/', views.signup, name='signup'),
     path('signin/', views.signin, name='signin'),
-    path('pay/', views.pay, name='pay')
+    path('pay/', views.pay, name='pay'),
+    path('<str:transactionId>', views.delete, name='delete')
 ]
