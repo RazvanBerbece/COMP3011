@@ -1,33 +1,36 @@
 from ...contexts.users.users_context import *
 from ...utils.security.Security import Security
 
-class AuthService():
+class AuthComponent():
     """
     Interface which provides methods for signing users up, checking account credentials on logins
     and other utils
     """
 
-    @staticmethod
-    def register_user(email: str, password: str):
-        # Setup context
-        users_context = UsersContext()
+    def __init__(self):
+        self.users_context = UsersContext()
+
+    def register_user(self, email: str, password: str):
         # Process user input
         hash, salt = Security.get_salted_and_hashed_plaintext(password)
+        # Check whether user already exists
+        exists = self.users_context.email_exists(email)
         # Store
-        users_context.add_user_to_table(email=email, hash=hash, salt=salt)
+        if (exists == False):
+            self.users_context.add_user_to_table(email=email, hash=hash, salt=salt)
+            return 0
         # Return status code / error
-        return 0
+        return -1
     
-    @staticmethod
-    def authenticate_user(email: str, password: str):
-        # Setup context
-        users_context = UsersContext()
+    def authenticate_user(self, email: str, password: str):
         # Retrieve salt for email
-        salt = users_context.get_salt_for_email(email)
+        salt = self.users_context.get_salt_for_email(email)
+        if salt == None:
+            return False
         # Compute salted hash
         hash = Security.get_hashed_with_salt(salt, password)
         # Query DB
-        registered = users_context.user_is_registered(email, hash)
+        registered = self.users_context.user_is_registered(email, hash)
         # Return status code / error
         if registered:
             return True

@@ -12,10 +12,26 @@ class UsersContext:
         user.save()
 
     @staticmethod
-    def get_salt_for_email(email: str):
-        pass
+    def email_exists(email: str):
+        try:
+            user = User.objects.get(Email=email)
+            return True
+        except:
+            return False
+
+    @staticmethod
+    def get_salt_for_email(email: str) -> bytes:
+        try:
+            user = User.objects.get(Email=email)
+            return user.Salt
+        except:
+            return None
     
     @staticmethod
     def user_is_registered(email: str, hash: str):
-        pass
+        try:
+            user = User.objects.get(Email=email, Password=hash)
+            return True
+        except:
+            return False
 
