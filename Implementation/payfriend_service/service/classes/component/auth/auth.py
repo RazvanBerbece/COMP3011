@@ -1,5 +1,7 @@
 from ...contexts.users.users_context import *
+
 from ...utils.security.Security import Security
+from ...utils.validation.validation import Validation
 
 class AuthComponent():
     """
@@ -11,6 +13,11 @@ class AuthComponent():
         self.users_context = UsersContext()
 
     def register_user(self, email: str, password: str):
+        # Validate user input
+        if Validation.is_valid_email_address(email) == False:
+            return -2
+        if Validation.is_valid_password(password) == False:
+            return -3
         # Process user input
         hash, salt = Security.get_salted_and_hashed_plaintext(password)
         # Check whether user already exists

@@ -1,11 +1,11 @@
 from django.test import TestCase
 
-# Model Imports
-from .models import Transaction
-
 # Context Imports
 from .classes.contexts.users.users_context import UsersContext
 from .classes.contexts.transactions.transactions_context import TransactionsContext
+
+# Component Imports
+from .classes.component.auth.auth import AuthComponent
 
 # Create your tests here.
 
@@ -93,3 +93,49 @@ class TransactionContextTestCase(TestCase):
         ### Sad path - Transaction does not exist and try to delete
         status_sad_path, err = self.transactions_context.delete_transaction_from_table("idWhichDoesNotExist")
         self.assertEqual(status_sad_path, -1, f"Transaction with ID idWhichDoesNotExist shouldn't be in the Transactions table to be deleted.")
+
+
+class AuthComponentTestCase(TestCase):
+
+    def setUp(self):
+        self.auth_component = AuthComponent()
+        # Different account types to test component functionality and validation flows
+        self.valid_account = {
+            "email": "abcdef@hotmail.com",
+            "password": "pass12345678"
+        }
+        self.invalid_account_1 = {
+            "email": "abcdef@hotmail.com",
+            "password": ""
+        }
+        self.invalid_account_2 = {
+            "email": "abcdef@...com",
+            "password": "pass12345678"
+        }
+    
+    def test_register_user(self):
+        """
+        User is correctly registered on the service
+        """
+        # Arrange
+        status_1 = self.auth_component.register_user(self.valid_account["email"], self.valid_account["password"])
+        status_2 = self.auth_component.register_user(self.invalid_account_1["email"], self.invalid_account_1["password"])
+        status_3 = self.auth_component.register_user(self.invalid_account_2["email"], self.invalid_account_2["password"])
+        # Assert
+        self.assertEqual(status_1, 0, "Valid account should be successfully registered on service.")
+        self.assertEqual(status_2, -3, "Invalid account (weak or no password) should not be registered on service.")
+        self.assertEqual(status_3, -2, "Invalid account (invalid email) should not be registered on service.")
+
+    def test_authenticate_user(self):
+        """
+        User is correctly authenticated through the service
+        """
+        # Arrange
+        self.auth_component.register_user(self.valid_account["email"], self.valid_account["password"])
+        registered = self.auth_component.authenticate_user(self.valid_account["email"], self.valid_account["password"])
+        registered_forbidden = self.auth_component.authenticate_user(self.valid_account["email"], "pass1234567899Wrong")
+        # Assert
+        self.assertEqual(registered, True, "Valid account should be successfully authenticated on service.")
+        self.assertEqual(registered_forbidden, False, "Invalid credentials should not authenticate on service.")
+
+    
