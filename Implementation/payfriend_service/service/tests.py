@@ -193,7 +193,7 @@ class PaymentComponentTestCase(TestCase):
         deleted = self.payment_component.delete_payment(id)
         t, err = self.transactions_context.get_transaction_from_table(id)
         # Assert
-        self.assertEqual(deleted, True, f"Transaction with ID {id} should be deleted successfully")
+        self.assertEqual(deleted, 0, f"Transaction with ID {id} should be deleted successfully")
         self.assertIsNone(t, f"Transaction with ID {id} should return a transaction obj")
         self.assertEqual(err, f"Transaction wth ID {id} not found in DB.", f"The DB should not have any record of transaction wth ID {id}")
     

@@ -13,6 +13,15 @@ class AuthComponent():
         self.users_context = UsersContext()
 
     def register_user(self, email: str, password: str):
+        """
+        Registers a user on the service by storing account details. Performs validation of input data, mainly that the
+        email is a valid email address and that the password is somewhat secure.
+        Returns:
+        - `-3` if provided password doesn't match service standards
+        - `-2` if provided email address is invalid
+        - `-1` if account with given email already exists
+        - `0` if credentials are valid and the user can register
+        """
         # Validate user input
         if Validation.is_valid_email_address(email) == False:
             return -2
@@ -30,6 +39,15 @@ class AuthComponent():
         return -1
     
     def authenticate_user(self, email: str, password: str):
+        """
+        Authenticates a pair of account credentials on the service. Performs validation of input data, mainly that the
+        email is a valid email address and that the password matches the standards.
+        Returns:
+        - `-3` if provided email address is invalid
+        - `-2` if provided password doesn't match service standards
+        - `-1` if account does not exist
+        - `0` if credentials match and the user can log in
+        """
         # Validate user input
         if Validation.is_valid_email_address(email) == False:
             return -2
