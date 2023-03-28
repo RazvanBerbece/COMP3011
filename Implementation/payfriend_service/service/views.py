@@ -14,12 +14,18 @@ from .classes.component.auth.auth import AuthComponent
 # Create your views here.
 
 def gateway(request):
+    """
+    Entrypoint for service. Used to check that service is up and running.
+    """
     timestamp = datetime.now(timezone.utc).timestamp() * 1000 # in milliseconds since Unix epoch
     response = Response("/", None, {}, timestamp, 1)
     return JsonResponse(response.get_json(), safe = False)
 
 @csrf_exempt 
 def signup(request):
+    """
+    Endpoint to register a user on the service using an email and a password provided in a POST request form-body.
+    """
     # Get POST body data
     email = request.POST.get('email')
     password = request.POST.get('password')
@@ -39,6 +45,9 @@ def signup(request):
 
 @csrf_exempt 
 def signin(request):
+    """
+    Endpoint to authenticate a user on the service using an email and a password provided in a POST request form-body.
+    """
     # Get POST body data
     email = request.POST.get('email')
     password = request.POST.get('password')
@@ -54,3 +63,11 @@ def signin(request):
         response._error = { "message": f"A user with the {email} email does not exist." }
         return JsonResponse(response.get_json(), safe = False)
     return JsonResponse(response.get_json(), safe = False)
+
+@csrf_exempt 
+def pay(request):
+    """
+    Endpoint to request a payment processing using details provided in a POST request form-body.
+    """
+    # Get POST body data
+    
