@@ -38,11 +38,22 @@ def signup(request):
     # Send response
     timestamp = datetime.now(timezone.utc).timestamp() * 1000 # in milliseconds since Unix epoch
     response = Response("/signup/", None, {}, timestamp, 1)
-    if status == -1:
-        # User already registered
-        response._error = { "message": f"A user with the {email} email address already exists." }
-        response.success = 0
-        return JsonResponse(response.get_json(), safe = False)
+    if status < 0:
+        if status == -1:
+            # User already registered
+            response._error = { "message": f"A user with the {email} email address already exists." }
+            response.success = 0
+            return JsonResponse(response.get_json(), safe = False)
+        elif status == -2:
+            # Invalid email address
+            response._error = { "message": f"The provided email address {email} is invalid to use for registration." }
+            response.success = 0
+            return JsonResponse(response.get_json(), safe = False)
+        elif status == -3:
+            # Invalid email address
+            response._error = { "message": f"The provided password is too weak to use for registration." }
+            response.success = 0
+            return JsonResponse(response.get_json(), safe = False)
     return JsonResponse(response.get_json(), safe = False)
 
 @csrf_exempt 
@@ -60,10 +71,22 @@ def signin(request):
     # Send response
     timestamp = datetime.now(timezone.utc).timestamp() * 1000 # in milliseconds since Unix epoch
     response = Response("/signin/", None, {}, timestamp, 1)
-    if status == False:
-        # User not registered
-        response._error = { "message": f"A user with the {email} email does not exist." }
-        return JsonResponse(response.get_json(), safe = False)
+    if status < 0:
+        if status == -1:
+            # User not registered
+            response._error = { "message": f"A user with the provided credentials does not exist." }
+            response.success = 0
+            return JsonResponse(response.get_json(), safe = False)
+        elif status == -2:
+            # Invalid email address
+            response._error = { "message": f"The provided email address {email} is invalid to use for signin." }
+            response.success = 0
+            return JsonResponse(response.get_json(), safe = False)
+        elif status == -3:
+            # Invalid email address
+            response._error = { "message": f"The provided password is not valid to use for signin." }
+            response.success = 0
+            return JsonResponse(response.get_json(), safe = False)
     return JsonResponse(response.get_json(), safe = False)
 
 @csrf_exempt 

@@ -1,4 +1,5 @@
 from django.test import TestCase
+from datetime import *
 
 # Context Imports
 from .classes.contexts.users.users_context import UsersContext
@@ -6,6 +7,7 @@ from .classes.contexts.transactions.transactions_context import TransactionsCont
 
 # Component Imports
 from .classes.component.auth.auth import AuthComponent
+from .classes.component.pay.pay import PaymentComponent
 
 # Create your tests here.
 
@@ -128,14 +130,70 @@ class AuthComponentTestCase(TestCase):
 
     def test_authenticate_user(self):
         """
-        User is correctly authenticated through the service
+        User is correctly authenticated or restricted on the service
         """
         # Arrange
         self.auth_component.register_user(self.valid_account["email"], self.valid_account["password"])
         registered = self.auth_component.authenticate_user(self.valid_account["email"], self.valid_account["password"])
         registered_forbidden = self.auth_component.authenticate_user(self.valid_account["email"], "pass1234567899Wrong")
         # Assert
-        self.assertEqual(registered, True, "Valid account should be successfully authenticated on service.")
-        self.assertEqual(registered_forbidden, False, "Invalid credentials should not authenticate on service.")
+        self.assertEqual(registered, 0, "Valid account should be successfully authenticated on service.")
+        self.assertEqual(registered_forbidden, -1, "Invalid credentials should not authenticate on service.")
 
+
+class PaymentComponentTestCase(TestCase):
+
+    def setUp(self):
+        self.transactions_context = TransactionsContext()
+        self.auth_component = AuthComponent()
+        self.payment_component = PaymentComponent()
+        # Setup account to use for transactions
+        self.valid_account = {
+            "email": "abcdef@hotmail.com",
+            "password": "pass12345678"
+        }
+        self.auth_component.register_user(self.valid_account["email"], self.valid_account["password"])
+
+    def test_process_payment(self):
+        # Setup
+        email = self.valid_account["email"]
+        password = self.valid_account["password"]
+        transaction_1, err_1 = self.payment_component.process_payment(email, \
+            password, 10.05, "TEST") # valid
+        transaction_2, err_2 = self.payment_component.process_payment(email, \
+            password, -10.05, "TEST") # invalid - value
+        transaction_3, err_3 = self.payment_component.process_payment(email, \
+            password, 10.05, "") # invalid - company
+        transaction_4, err_4 = self.payment_component.process_payment(email, \
+            password + "xxx", 10.05, "TEST") # invalid - account
+        # Assert
+        # T1
+        self.assertIsNone(err_1, "Transaction 1 should be processed successfully")
+        self.assertIsNotNone(transaction_1, "Transaction 1 should return a transaction obj")
+        # T2
+        self.assertIsNone(transaction_2, "Transaction 2 should not be processed")
+        self.assertIsNotNone(err_2, "Transaction 2 should return an error")
+        self.assertEqual(err_2, "Payment details not valid (Transaction value).", "Transaction 2 should return the correct error message")
+        # T3
+        self.assertIsNone(transaction_3, "Transaction 3 should not be processed")
+        self.assertIsNotNone(err_3, "Transaction 3 should return an error")
+        self.assertEqual(err_3, "Payment details not valid (Company name).", "Transaction 3 should return the correct error message")
+        # T4
+        self.assertIsNone(transaction_4, "Transaction 4 should not be processed")
+        self.assertIsNotNone(err_4, "Transaction 4 should return an error")
+        self.assertEqual(err_4, f"Provided account credentials are incorrect.", "Transaction 4 should return the correct error message")
+
+    def test_delete_payment(self):
+        # Setup
+        email = self.valid_account["email"]
+        password = self.valid_account["password"]
+        transaction_1, err_1 = self.payment_component.process_payment(email, \
+            password, 10.05, "TEST")
+        id = transaction_1["id"]
+        deleted = self.payment_component.delete_payment(id)
+        t, err = self.transactions_context.get_transaction_from_table(id)
+        # Assert
+        self.assertEqual(deleted, True, f"Transaction with ID {id} should be deleted successfully")
+        self.assertIsNone(t, f"Transaction with ID {id} should return a transaction obj")
+        self.assertEqual(err, f"Transaction wth ID {id} not found in DB.", f"The DB should not have any record of transaction wth ID {id}")
     

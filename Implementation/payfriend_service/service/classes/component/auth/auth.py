@@ -30,16 +30,21 @@ class AuthComponent():
         return -1
     
     def authenticate_user(self, email: str, password: str):
+        # Validate user input
+        if Validation.is_valid_email_address(email) == False:
+            return -2
+        if Validation.is_valid_password(password) == False:
+            return -3
         # Retrieve salt for email
         salt = self.users_context.get_salt_for_email(email)
         if salt == None:
-            return False
+            return -1
         # Compute salted hash
         hash = Security.get_hashed_with_salt(salt, password)
         # Query DB
         registered = self.users_context.user_is_registered(email, hash)
         # Return status code / error
         if registered:
-            return True
+            return 0
         else:
-            return False
+            return -1
