@@ -15,7 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from service import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', views.gateway, name='gateway'),
+    path('signup/', views.signup, name='signup'),
+    path('signin/', views.signin, name='signin'),
+    path('pay/', views.pay, name='pay'),
+    path('<str:transactionId>', views.delete, name='delete')
 ]

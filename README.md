@@ -1,14 +1,14 @@
-# COMP3011
+# COMP3011 - PayFriend Payment Service
 Monorepo which holds the code and documentation for CW2 of the COMP3011 module.
 
 # How to Run (Locally)
-1. In `Implementation/paypal_service/` run the `python manage.py runserver` command to start the service
+1. In `Implementation/payfriend_service/` run the `python manage.py runserver` command to start the service
 2. Navigate to http://127.0.0.1:8000/admin/, which is the project admin site
 
 # Local Database Access
 Database acces is done through the admin site. 
 
-**Note: The models needs to be specifically registered with the admin site by adding them into the `Implementation/paypal_service/service/admin.py` file.**
+**Note: The models needs to be specifically registered with the admin site by adding them into the `Implementation/payfriend_service/service/admin.py` file.**
 
 # Local Testing
 TODO
