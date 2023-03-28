@@ -16,11 +16,25 @@ class TransactionsContext:
         transaction.save()
     
     @staticmethod
+    def get_transaction_from_table(transactionId: str):
+        try:
+            t = Transaction.objects.get(TransactionId=transactionId)
+            return {
+                "id": f"{t.TransactionId}",
+                "email": f"{t.CustomerEmail}",
+                "value": t.Value,
+                "timestamp": t.Timestamp,
+                "company": f"{t.Company}"
+            }, None
+        except:
+            return None, f"Transaction wth ID {transactionId} not found in DB."
+    
+    @staticmethod
     def delete_transaction_from_table(transactionId: str):
         try:
             t = Transaction.objects.get(TransactionId=transactionId)
             t.delete()
-            return 0
+            return 0, None
         except:
-            return -1
+            return -1, f"Transaction wth ID {transactionId} not found in DB."
 
