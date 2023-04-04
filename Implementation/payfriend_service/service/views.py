@@ -21,7 +21,7 @@ def gateway(request):
     """
     timestamp = datetime.now(timezone.utc).timestamp() * 1000 # in milliseconds since Unix epoch
     response = Response("/", None, {}, timestamp, 1)
-    return JsonResponse(response.get_json(), safe = False)
+    return JsonResponse(response.get_json(), safe = False, status = 200)
 
 @csrf_exempt 
 def signup(request):
@@ -43,18 +43,18 @@ def signup(request):
             # User already registered
             response._error = { "message": f"A user with the {email} email address already exists." }
             response.success = 0
-            return JsonResponse(response.get_json(), safe = False)
+            return JsonResponse(response.get_json(), safe = False, status = 501)
         elif status == -2:
             # Invalid email address
             response._error = { "message": f"The provided email address {email} is invalid to use for registration." }
             response.success = 0
-            return JsonResponse(response.get_json(), safe = False)
+            return JsonResponse(response.get_json(), safe = False, status = 402)
         elif status == -3:
             # Invalid password
             response._error = { "message": f"The provided password is too weak to use for registration." }
             response.success = 0
-            return JsonResponse(response.get_json(), safe = False)
-    return JsonResponse(response.get_json(), safe = False)
+            return JsonResponse(response.get_json(), safe = False, status = 402)
+    return JsonResponse(response.get_json(), safe = False, status = 201)
 
 @csrf_exempt 
 def signin(request):
@@ -76,18 +76,18 @@ def signin(request):
             # User not registered
             response._error = { "message": f"A user with the provided credentials does not exist." }
             response.success = 0
-            return JsonResponse(response.get_json(), safe = False)
+            return JsonResponse(response.get_json(), safe = False, status = 502)
         elif status == -2:
             # Invalid email address
             response._error = { "message": f"The provided email address {email} is invalid to use for signin." }
             response.success = 0
-            return JsonResponse(response.get_json(), safe = False)
+            return JsonResponse(response.get_json(), safe = False, status = 402)
         elif status == -3:
             # Invalid email address
             response._error = { "message": f"The provided password is not valid to use for signin." }
             response.success = 0
-            return JsonResponse(response.get_json(), safe = False)
-    return JsonResponse(response.get_json(), safe = False)
+            return JsonResponse(response.get_json(), safe = False, status = 402)
+    return JsonResponse(response.get_json(), safe = False, status = 200)
 
 @csrf_exempt 
 def pay(request):
@@ -107,11 +107,11 @@ def pay(request):
         # Payment failed to process
         timestamp = datetime.now(timezone.utc).timestamp() * 1000 # in milliseconds since Unix epoch
         response = Response("/pay/", None, { "message": err }, timestamp, 0)
-        return JsonResponse(response.get_json(), safe = False)
+        return JsonResponse(response.get_json(), safe = False, status = 500)
     else:
         # Successful payment
         response = PaymentResponse(transaction["id"], None, transaction["timestamp"])
-        return JsonResponse(response.get_json(), safe = False)
+        return JsonResponse(response.get_json(), safe = False, status = 200)
 
 @csrf_exempt 
 def delete(request, transactionId: str):
@@ -127,13 +127,13 @@ def delete(request, transactionId: str):
             # Transaction not found
             timestamp = datetime.now(timezone.utc).timestamp() * 1000 # in milliseconds since Unix epoch
             response = Response(f"/{transactionId}", transactionId, { "message": f"Transaction with ID {transactionId} not found in store." }, timestamp, 0)
-            return JsonResponse(response.get_json(), safe = False)
+            return JsonResponse(response.get_json(), safe = False, status = 503)
         elif (status == -2):
             # Transaction id not valid
             timestamp = datetime.now(timezone.utc).timestamp() * 1000 # in milliseconds since Unix epoch
             response = Response(f"/{transactionId}", transactionId, { "message": f"Transaction ID {transactionId} is invalid." }, timestamp, 0)
-            return JsonResponse(response.get_json(), safe = False)
+            return JsonResponse(response.get_json(), safe = False, status = 420)
     # Transaction deletion successful
     timestamp = datetime.now(timezone.utc).timestamp() * 1000 # in milliseconds since Unix epoch
     response = Response(f"/{transactionId}", transactionId, {}, timestamp, 1)
-    return JsonResponse(response.get_json(), safe = False)
+    return JsonResponse(response.get_json(), safe = False, status = 202)
