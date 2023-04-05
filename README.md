@@ -5,6 +5,9 @@ Monorepo which holds the code and documentation for CW2 of the COMP3011 module.
 1. In `Implementation/payfriend_service/` run the `python manage.py runserver` command to start the service
 2. Navigate to http://127.0.0.1:8000/admin/, which is the project admin site
 
+# Public Endpoint
+https://sc19rab.pythonanywhere.com/
+
 # Local Database Access
 Database acces is done through the admin site. 
 

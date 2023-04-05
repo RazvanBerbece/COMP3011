@@ -1,5 +1,3 @@
-import json
-
 class PaymentResponse:
     """
     Response structure returned by service on the `/pay` endpoint

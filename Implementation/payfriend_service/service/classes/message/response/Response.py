@@ -1,5 +1,3 @@
-import json
-
 class Response:
     """
     Response structure returned by service on the `/signup`, `DELETE /{transactionId}` endpoints.

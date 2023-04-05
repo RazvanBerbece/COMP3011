@@ -12,7 +12,13 @@ class TransactionsContext:
              Value=transaction["value"], \
              CustomerEmail=transaction["email"], \
              Timestamp=transaction["timestamp"], \
-             Company=transaction["company"])
+             Company=transaction["company"],
+             City=transaction["city"], \
+             Postcode=transaction["postcode"], \
+             Country=transaction["country"], \
+             SourceCurrency=transaction["currency"], \
+             SysCurrency="GBP", \
+        )
         transaction.save()
     
     @staticmethod
@@ -24,7 +30,12 @@ class TransactionsContext:
                 "email": f"{t.CustomerEmail}",
                 "value": t.Value,
                 "timestamp": t.Timestamp,
-                "company": f"{t.Company}"
+                "company": f"{t.Company}",
+                "city": f"{t.City}",
+                "postcode": f"{t.Postcode}",
+                "country": f"{t.Country}",
+                "sourceCurrency": f"{t.SourceCurrency}",
+                "sysCurrency": f"{t.SysCurrency}"
             }, None
         except:
             return None, f"Transaction wth ID {transactionId} not found in DB."

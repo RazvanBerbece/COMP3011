@@ -4,6 +4,8 @@ from datetime import *
 from ...contexts.transactions.transactions_context import *
 from ..auth.auth import AuthComponent
 
+from ...utils.validation.validation import Validation
+
 class PaymentComponent():
     """
     Interface which provides methods for processing payments, generating transactions and deleting transactions
@@ -13,7 +15,7 @@ class PaymentComponent():
     def __init__(self):
         self.transactions_context = TransactionsContext()
 
-    def process_payment(self, email: str, password: str, value: float, company: str):
+    def process_payment(self, email: str, password: str, value: float, company: str, city: str, postcode: str, country: float, currency: str):
         """
         Processes a payment through the system, stores the record and returns a transaction object which holds the stores data,
         including the transaction ID.
@@ -30,21 +32,32 @@ class PaymentComponent():
                 return None, f"Provided email address is invalid."
             elif registered == -3:
                 return None, f"Provided password is invalid."
-        # Check that payment details are valid
+        # Check that transaction details are valid
         if (float(value) <= 0):
             return None, f"Payment details not valid (Transaction value)."
         if (company == ""):
             return None, f"Payment details not valid (Company name)."
-        # Process payment
+
+        # Start transaction processing
+        ## Build transaction object
         transaction = {
             "id": str(uuid.uuid4()),
             "value": value,
             "email": email,
             "timestamp": datetime.now(timezone.utc).timestamp() * 1000, # in milliseconds since Unix epoch
-            "company": company
+            "company": company,
+            "city": city,
+            "postcode": postcode,
+            "country": country,
+            "currency": currency
         }
-        # Store transaction
+        if (Validation.is_valid_transaction(transaction) == False):
+            return None, f"Billing details not valid (City, Postcode, Country, Currency)."
+
+        ## Store transaction
         self.transactions_context.add_transaction_to_table(transaction)
+
+        # End transaction processing
         return transaction, None
 
     def delete_payment(self, transactionId: str):
