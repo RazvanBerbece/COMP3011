@@ -13,6 +13,6 @@ The source code files can be found in `./payfriend_service/`.
 # Running the tests
 1. Run `python manage.py test` in folder `./payfriend_service/`
 
-# Service Demo Account 
+# Service Demo Account (To Process Payments) 
 Email: `ammarcomp@leeds.com`
 Password: `testpass12345678`

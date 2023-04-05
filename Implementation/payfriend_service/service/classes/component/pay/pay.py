@@ -13,7 +13,7 @@ class PaymentComponent():
     def __init__(self):
         self.transactions_context = TransactionsContext()
 
-    def process_payment(self, email: str, password: str, value: float, company: str):
+    def process_payment(self, email: str, password: str, value: float, company: str, city: str, postcode: str, country: float, currency: str):
         """
         Processes a payment through the system, stores the record and returns a transaction object which holds the stores data,
         including the transaction ID.
@@ -41,7 +41,11 @@ class PaymentComponent():
             "value": value,
             "email": email,
             "timestamp": datetime.now(timezone.utc).timestamp() * 1000, # in milliseconds since Unix epoch
-            "company": company
+            "company": company,
+            "city": city,
+            "postcode": postcode,
+            "country": country,
+            "currency": currency
         }
         # Store transaction
         self.transactions_context.add_transaction_to_table(transaction)

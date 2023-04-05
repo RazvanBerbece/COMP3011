@@ -99,10 +99,14 @@ def pay(request):
     password = request.POST.get('password')
     value = request.POST.get('value')
     company = request.POST.get('company')
+    city = request.POST.get('city')
+    postcode = request.POST.get('postcode')
+    country = request.POST.get('country')
+    currency = request.POST.get('currency')
     # Inject component instances
     payment_component = PaymentComponent()
     # Process payment details and login credentials
-    transaction, err = payment_component.process_payment(email, password, value, company)
+    transaction, err = payment_component.process_payment(email, password, value, company, city, postcode, country, currency)
     if err != None:
         # Payment failed to process
         timestamp = datetime.now(timezone.utc).timestamp() * 1000 # in milliseconds since Unix epoch
@@ -118,22 +122,27 @@ def delete(request, transactionId: str):
     """
     Endpoint to request a transaction deletion from the store using details provided in the URL path.
     """
-    # Inject component instances
-    payment_component = PaymentComponent()
-    # Remove transaction
-    status = payment_component.delete_payment(transactionId)
-    if (status < 0):
-        if (status == -1):
-            # Transaction not found
-            timestamp = datetime.now(timezone.utc).timestamp() * 1000 # in milliseconds since Unix epoch
-            response = Response(f"/{transactionId}", transactionId, { "message": f"Transaction with ID {transactionId} not found in store." }, timestamp, 0)
-            return JsonResponse(response.get_json(), safe = False, status = 503)
-        elif (status == -2):
-            # Transaction id not valid
-            timestamp = datetime.now(timezone.utc).timestamp() * 1000 # in milliseconds since Unix epoch
-            response = Response(f"/{transactionId}", transactionId, { "message": f"Transaction ID {transactionId} is invalid." }, timestamp, 0)
-            return JsonResponse(response.get_json(), safe = False, status = 420)
-    # Transaction deletion successful
-    timestamp = datetime.now(timezone.utc).timestamp() * 1000 # in milliseconds since Unix epoch
-    response = Response(f"/{transactionId}", transactionId, {}, timestamp, 1)
-    return JsonResponse(response.get_json(), safe = False, status = 202)
+    if request.method == 'DELETE':
+        # Inject component instances
+        payment_component = PaymentComponent()
+        # Remove transaction
+        status = payment_component.delete_payment(transactionId)
+        if (status < 0):
+            if (status == -1):
+                # Transaction not found
+                timestamp = datetime.now(timezone.utc).timestamp() * 1000 # in milliseconds since Unix epoch
+                response = Response(f"/{transactionId}", transactionId, { "message": f"Transaction with ID {transactionId} not found in store." }, timestamp, 0)
+                return JsonResponse(response.get_json(), safe = False, status = 503)
+            elif (status == -2):
+                # Transaction id not valid
+                timestamp = datetime.now(timezone.utc).timestamp() * 1000 # in milliseconds since Unix epoch
+                response = Response(f"/{transactionId}", transactionId, { "message": f"Transaction ID {transactionId} is invalid." }, timestamp, 0)
+                return JsonResponse(response.get_json(), safe = False, status = 406)
+        # Transaction deletion successful
+        timestamp = datetime.now(timezone.utc).timestamp() * 1000 # in milliseconds since Unix epoch
+        response = Response(f"/{transactionId}", transactionId, {}, timestamp, 1)
+        return JsonResponse(response.get_json(), safe = False, status = 202)
+    else:
+        timestamp = datetime.now(timezone.utc).timestamp() * 1000 # in milliseconds since Unix epoch
+        response = Response(f"/{transactionId}", transactionId, { "message": f"Method {request.method} not allowed for resource path /{transactionId}." }, timestamp, 0)
+        return JsonResponse(response.get_json(), safe = False, status = 420)

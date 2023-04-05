@@ -60,14 +60,22 @@ class TransactionContextTestCase(TestCase):
             "email": "abc@test.com",
             "value": 10.666,
             "timestamp": 170000.560,
-            "company": "TestFlights"
+            "company": "TestFlights",
+            "city": "Leeds",
+            "postcode": "LS420ND",
+            "country": "United Kingdom",
+            "currency": "GBP"
         }
         self.valid_transaction_to_delete = {
             "id": "id1234",
             "email": "abc@test.com",
             "value": 10.666,
             "timestamp": 170000.560,
-            "company": "TestFlights"
+            "company": "TestFlights",
+            "city": "Leeds",
+            "postcode": "LS420ND",
+            "country": "United Kingdom",
+            "currency": "GBP"
         }
         self.transactions_context.add_transaction_to_table(self.valid_transaction)
         self.transactions_context.add_transaction_to_table(self.valid_transaction_to_delete)
@@ -159,13 +167,13 @@ class PaymentComponentTestCase(TestCase):
         email = self.valid_account["email"]
         password = self.valid_account["password"]
         transaction_1, err_1 = self.payment_component.process_payment(email, \
-            password, 10.05, "TEST") # valid
+            password, 10.05, "TEST", "Leeds", "LS420ND", "United Kingdom", "GBP") # valid
         transaction_2, err_2 = self.payment_component.process_payment(email, \
-            password, -10.05, "TEST") # invalid - value
+            password, -10.05, "TEST", "Leeds", "LS420ND", "United Kingdom", "GBP") # invalid - value
         transaction_3, err_3 = self.payment_component.process_payment(email, \
-            password, 10.05, "") # invalid - company
+            password, 10.05, "", "Leeds", "LS420ND", "United Kingdom", "GBP") # invalid - company
         transaction_4, err_4 = self.payment_component.process_payment(email, \
-            password + "xxx", 10.05, "TEST") # invalid - account
+            password + "xxx", 10.05, "TEST", "Leeds", "LS420ND", "United Kingdom", "GBP") # invalid - account
         # Assert
         # T1
         self.assertIsNone(err_1, "Transaction 1 should be processed successfully")
@@ -188,7 +196,7 @@ class PaymentComponentTestCase(TestCase):
         email = self.valid_account["email"]
         password = self.valid_account["password"]
         transaction_1, err_1 = self.payment_component.process_payment(email, \
-            password, 10.05, "TEST")
+            password, 10.05, "TEST", "Leeds", "LS420ND", "United Kingdom", "GBP")
         id = transaction_1["id"]
         deleted = self.payment_component.delete_payment(id)
         t, err = self.transactions_context.get_transaction_from_table(id)
