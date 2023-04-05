@@ -118,9 +118,9 @@ def pay(request):
         return JsonResponse(response.get_json(), safe = False, status = 200)
 
 @csrf_exempt 
-def delete(request, transactionId: str):
+def transactions(request, transactionId: str):
     """
-    Endpoint to request a transaction deletion from the store using details provided in the URL path.
+    Endpoint to request a transaction operation (READ, DELETE) in the store using details provided in the URL path.
     """
     if request.method == 'DELETE':
         # Inject component instances
