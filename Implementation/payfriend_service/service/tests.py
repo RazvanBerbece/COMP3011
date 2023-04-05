@@ -174,6 +174,8 @@ class PaymentComponentTestCase(TestCase):
             password, 10.05, "", "Leeds", "LS420ND", "United Kingdom", "GBP") # invalid - company
         transaction_4, err_4 = self.payment_component.process_payment(email, \
             password + "xxx", 10.05, "TEST", "Leeds", "LS420ND", "United Kingdom", "GBP") # invalid - account
+        transaction_5, err_5 = self.payment_component.process_payment(email, \
+            password, 10.05, "TEST", "", "LS420ND", "United Kingdom", "GBP") # invalid - city
         # Assert
         # T1
         self.assertIsNone(err_1, "Transaction 1 should be processed successfully")
@@ -190,6 +192,10 @@ class PaymentComponentTestCase(TestCase):
         self.assertIsNone(transaction_4, "Transaction 4 should not be processed")
         self.assertIsNotNone(err_4, "Transaction 4 should return an error")
         self.assertEqual(err_4, f"Provided account credentials are incorrect.", "Transaction 4 should return the correct error message")
+        # T5
+        self.assertIsNone(transaction_5, "Transaction 5 should not be processed")
+        self.assertIsNotNone(err_5, "Transaction 5 should return an error")
+        self.assertEqual(err_5, "Billing details not valid (City, Postcode, Country, Currency).", "Transaction 5 should return the correct error message")
 
     def test_delete_payment(self):
         # Setup

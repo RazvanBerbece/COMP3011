@@ -35,6 +35,8 @@ class PaymentComponent():
             return None, f"Payment details not valid (Transaction value)."
         if (company == ""):
             return None, f"Payment details not valid (Company name)."
+        if (city == "" or postcode == "" or country == "" or currency == ""):
+            return None, f"Billing details not valid (City, Postcode, Country, Currency)."
         # Process payment
         transaction = {
             "id": str(uuid.uuid4()),
