@@ -4,6 +4,8 @@ from datetime import *
 from ...contexts.transactions.transactions_context import *
 from ..auth.auth import AuthComponent
 
+from ...utils.validation.validation import Validation
+
 class PaymentComponent():
     """
     Interface which provides methods for processing payments, generating transactions and deleting transactions
@@ -30,14 +32,14 @@ class PaymentComponent():
                 return None, f"Provided email address is invalid."
             elif registered == -3:
                 return None, f"Provided password is invalid."
-        # Check that payment details are valid
+        # Check that transaction details are valid
         if (float(value) <= 0):
             return None, f"Payment details not valid (Transaction value)."
         if (company == ""):
             return None, f"Payment details not valid (Company name)."
-        if (city == "" or postcode == "" or country == "" or currency == ""):
-            return None, f"Billing details not valid (City, Postcode, Country, Currency)."
-        # Process payment
+
+        # Start transaction processing
+        ## Build transaction object
         transaction = {
             "id": str(uuid.uuid4()),
             "value": value,
@@ -49,8 +51,13 @@ class PaymentComponent():
             "country": country,
             "currency": currency
         }
-        # Store transaction
+        if (Validation.is_valid_transaction(transaction) == False):
+            return None, f"Billing details not valid (City, Postcode, Country, Currency)."
+
+        ## Store transaction
         self.transactions_context.add_transaction_to_table(transaction)
+
+        # End transaction processing
         return transaction, None
 
     def delete_payment(self, transactionId: str):

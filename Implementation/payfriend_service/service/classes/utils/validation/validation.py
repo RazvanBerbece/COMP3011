@@ -17,3 +17,10 @@ class Validation:
     def is_valid_password(password: str):
         if (len(password) < 8):
             return False
+        return True
+    
+    @staticmethod
+    def is_valid_transaction(transaction: object):
+        if (transaction["city"] == "" or transaction["postcode"] == "" or transaction["country"] == "" or transaction["currency"] == ""):
+            return False
+        return True
